@@ -6,14 +6,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
 const PORT =3000;
-app.get('/webHook/instagram',(req,res)=>{
+app.get('/webhook/instagram',(req,res)=>{
     try {
-        const verify_token="my_veryify_token";
+        const verify_token="my_verify_token";
         const mode=req.query['hub.mode'];
         const token = req.query["hub.verify_token"];
         const challenge = req.query["hub.challenge"];
 
-        if(mode==='subscibe' && token===verify_token){
+        if(mode==='subscribe' && token===verify_token){
             return res.status(200).send(challenge);
         }
     } catch (error) {
