@@ -21,6 +21,10 @@ app.get('/webHook/instagram',(req,res)=>{
         return res.status(500).send("internal server error");
     }
 })
+app.post("/webhooks/instagram", (req, res) => {
+  console.log("Webhook Event:", JSON.stringify(req.body, null, 2));
+  res.sendStatus(200);
+});
 app.listen(3000,()=>{
     console.log(`servers started`);
 })
