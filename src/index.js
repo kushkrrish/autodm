@@ -5,7 +5,7 @@ const bodyParser=require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
-const PORT =3000;
+const PORT = process.env.PORT || 3000;
 app.get('/webhook/instagram',(req,res)=>{
     try {
         const verify_token="my_verify_token";
