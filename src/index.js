@@ -25,6 +25,15 @@ app.post("/webhooks/instagram", (req, res) => {
   console.log("Webhook Event:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
+app.get("/privacy-policy", (req, res) => {
+  res.send(`
+    <h1>Privacy Policy</h1>
+    <p>This app collects Instagram data only to automate replies.</p>
+    <p>No data is shared with third parties.</p>
+    <p>Contact: kushagra16.kapoor@gmail.com</p>
+  `);
+});
+
 app.listen(PORT,()=>{
     console.log(`servers started`);
 })
