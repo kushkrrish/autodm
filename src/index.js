@@ -5,7 +5,7 @@ const bodyParser=require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
-
+const PORT =3000;
 app.get('/webHook/instagram',(req,res)=>{
     try {
         const verify_token="my_veryify_token";
@@ -25,6 +25,6 @@ app.post("/webhooks/instagram", (req, res) => {
   console.log("Webhook Event:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
-app.listen(3000,()=>{
+app.listen(PORT,()=>{
     console.log(`servers started`);
 })
