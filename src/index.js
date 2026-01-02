@@ -68,7 +68,10 @@ app.get("/auth/instagram/callback", async (req, res) => {
     console.error("Auth Error:", error.response?.data || error);
     res.status(500).send("Authentication failed");
   }
-})
+});
+app.get("/ping", (req, res) => {
+  res.send("PONG");
+});
 
 app.listen(PORT, () => {
   console.log(`servers started`);
