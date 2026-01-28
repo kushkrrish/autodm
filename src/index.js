@@ -48,19 +48,19 @@ app.get('/auth/instagram', (req, res) => {
     `&scope=` +
     [
       'instagram_basic',
-      'instagram_manage_messages',
-      'instagram_manage_comments',
       'pages_show_list',
-      'pages_read_engagement',
-      'pages_manage_metadata'
+      'pages_read_engagement'
     ].join(',');
 
   res.redirect(authUrl);
 });
 
 
+
 app.get('/auth/instagram/callback', async (req, res) => {
   try {
+    console.log("CALLBACK QUERY:", req.query);
+
     const code = req.query.code;
     if (!code) return res.redirect('/error');
 
@@ -77,17 +77,14 @@ app.get('/auth/instagram/callback', async (req, res) => {
     );
 
     const userAccessToken = tokenRes.data.access_token;
+    console.log('USER ACCESS TOKEN:', userAccessToken);
 
-    console.log('User Access Token:', userAccessToken);
-
-    // NEXT STEP: get pages
     res.redirect('/success');
   } catch (err) {
-    console.error(err.response?.data || err);
+    console.error('TOKEN ERROR:', err.response?.data || err);
     res.redirect('/error');
   }
 });
-
 
 /* -------------- WEBHOOK VERIFY ------------- */
 app.get('/webhook/instagram', (req, res) => {
