@@ -41,45 +41,53 @@ app.get('/error', (req, res) => {
 /* -------- INSTAGRAM OAUTH START -------- */
 app.get('/auth/instagram', (req, res) => {
   const authUrl =
-    `https://www.instagram.com/oauth/authorize?force_reauth=true&client_id=2778227255861888&redirect_uri=https://autodm-1.onrender.com/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights`
+    `https://www.facebook.com/v19.0/dialog/oauth` +
+    `?client_id=${serverConfig.INSTAGRAM_APP_ID}` +
+    `&redirect_uri=${encodeURIComponent(serverConfig.REDIRECT_URI)}` +
+    `&response_type=code` +
+    `&scope=` +
+    [
+      'instagram_basic',
+      'instagram_manage_messages',
+      'instagram_manage_comments',
+      'pages_show_list',
+      'pages_read_engagement',
+      'pages_manage_metadata'
+    ].join(',');
 
   res.redirect(authUrl);
 });
 
+
 app.get('/auth/instagram/callback', async (req, res) => {
   try {
     const code = req.query.code;
-    if (!code) {
-      return res.status(400).send('No authorization code');
-    }
+    if (!code) return res.redirect('/error');
 
-    const response = await axios.post(
-      'https://api.instagram.com/oauth/access_token',
-      new URLSearchParams({
-        client_id: serverConfig.INSTAGRAM_APP_ID,
-        client_secret: serverConfig.INSTAGRAM_APP_SECRET,
-        grant_type: 'authorization_code',
-        redirect_uri: serverConfig.REDIRECT_URI,
-        code,
-      }),
+    const tokenRes = await axios.get(
+      'https://graph.facebook.com/v19.0/oauth/access_token',
       {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        params: {
+          client_id: serverConfig.INSTAGRAM_APP_ID,
+          client_secret: serverConfig.INSTAGRAM_APP_SECRET,
+          redirect_uri: serverConfig.REDIRECT_URI,
+          code
+        }
       }
     );
 
-    const { access_token, user_id } = response.data;
+    const userAccessToken = tokenRes.data.access_token;
 
-    console.log('Access Token:', access_token);
-    console.log('Instagram User ID:', user_id);
+    console.log('User Access Token:', userAccessToken);
 
+    // NEXT STEP: get pages
     res.redirect('/success');
-  } catch (error) {
-    console.error('Auth Error:', error.response?.data || error);
+  } catch (err) {
+    console.error(err.response?.data || err);
     res.redirect('/error');
   }
 });
+
 
 /* -------------- WEBHOOK VERIFY ------------- */
 app.get('/webhook/instagram', (req, res) => {
