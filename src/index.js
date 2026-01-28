@@ -50,7 +50,7 @@ app.get('/auth/instagram', (req, res) => {
       'instagram_basic',
       'pages_show_list',
       'pages_read_engagement'
-    ].join(',');
+    ].join(' ');
 
   res.redirect(authUrl);
 });
